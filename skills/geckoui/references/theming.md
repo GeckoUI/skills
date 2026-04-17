@@ -286,13 +286,12 @@ Built-in: `border`, `rounded-md`, `px-3`, `py-1.5`, `text-sm`.
 
 ### Menu
 
-| Class                            | Element    | Targets                     | Data Attrs      |
-| -------------------------------- | ---------- | --------------------------- | --------------- |
-| `.GeckoUIMenu`                   | `<div>`    | Outer wrapper               | —               |
-| `.GeckoUIMenu__button`           | `<button>` | Default trigger button      | —               |
-| `.GeckoUIMenu__items`            | `<div>`    | Floating dropdown panel     | —               |
-| `.GeckoUIMenu__scroll-container` | `<div>`    | Scrollable items area       | —               |
-| `.GeckoUIMenu__item`             | `<div>`    | Individual menu action item | `data-disabled` |
+| Class                  | Element    | Targets                              | Data Attrs      |
+| ---------------------- | ---------- | ------------------------------------ | --------------- |
+| `.GeckoUIMenu`         | `<div>`    | Outer wrapper                        | —               |
+| `.GeckoUIMenu__button` | `<button>` | Default trigger button               | —               |
+| `.GeckoUIMenu__items`  | `<div>`    | Floating dropdown panel (scrollable) | —               |
+| `.GeckoUIMenu__item`   | `<div>`    | Individual menu action item          | `data-disabled` |
 
 Built-in panel: `border`, `rounded-md`, `p-1`, `shadow-xl`. Built-in item: `px-3`, `py-2`, `text-sm`, `rounded`.
 
