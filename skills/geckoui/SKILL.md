@@ -152,9 +152,9 @@ Extends `TextareaAutosizeProps`.
 ```tsx
 // Default button
 <Menu label="Actions">
-  <MenuItem label="Edit" onClick={() => {}} />
-  <MenuItem label="Delete" onClick={() => {}} />
-  <MenuItem label="Archived" disabled />
+  <MenuItem onClick={() => {}}>Edit</MenuItem>
+  <MenuItem onClick={() => {}}>Delete</MenuItem>
+  <MenuItem disabled>Archived</MenuItem>
 </Menu>
 
 // Custom trigger
@@ -162,13 +162,13 @@ Extends `TextareaAutosizeProps`.
   <MenuTrigger>
     {({ toggleMenu }) => <Button onClick={toggleMenu}>Options</Button>}
   </MenuTrigger>
-  <MenuItem label="Edit" onClick={() => {}} />
+  <MenuItem onClick={() => {}}>Edit</MenuItem>
 </Menu>
 ```
 
 **Menu props:** `label`, `disabled`, `placement`, `floatingStrategy`, `className` (outer wrapper), `menuClassName` (dropdown panel), `buttonClassName` (default button).
 
-**MenuItem props:** `label` (required), `onClick`, `disabled`, `children`.
+**MenuItem props:** `onClick`, `disabled`, `children`.
 
 **MenuTrigger:** render function receiving `{ open, toggleMenu, openMenu, closeMenu, disabled }`.
 
