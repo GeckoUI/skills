@@ -78,7 +78,7 @@ export default function App() {
 }
 ```
 
-`<GeckoUIPortal />` mounts hosts for `Dialog`, `Drawer`, `Toast`, `Tooltip`, and the `Select` bottom-sheet menu — render it once at the app root.
+`<GeckoUIPortal />` mounts all overlay hosts — render it once at the app root. Internally it renders `<GeckoUIOverlayHosts />` (calendar, menu panel, select, toast, tooltip) plus `<DialogHost />` and `<DrawerHost />`.
 
 ## Override priority
 
@@ -387,19 +387,19 @@ Drawer.show(<Filters />, { placement: "bottom" });
 Drawer.dismiss();
 ```
 
-| Prop                | Type                                     | Default   |
-| ------------------- | ---------------------------------------- | --------- |
-| `open`              | `boolean`                                | required  |
-| `handleClose`       | `() => void`                             | -         |
-| `placement`         | `"top" \| "bottom" \| "left" \| "right"` | `"right"` |
-| `hideBackdrop`      | `boolean`                                | `false`   |
-| `allowClickOutside` | `boolean` (allow pointer events through) | -         |
-| `dismissOnEscape`   | `boolean` (hardware back)                | `true`    |
-| `children`          | `ReactNode`                              | -         |
-| `backdropClassName` | `string`                                 | -         |
-| `backdropStyle`     | `StyleProp<ViewStyle>` (RN-only)         | -         |
-| `className`         | `string` (panel)                         | -         |
-| `style`             | `StyleProp<ViewStyle>` (RN-only)         | -         |
+| Prop                     | Type                                     | Default   |
+| ------------------------ | ---------------------------------------- | --------- |
+| `open`                   | `boolean`                                | required  |
+| `handleClose`            | `() => void`                             | -         |
+| `placement`              | `"top" \| "bottom" \| "left" \| "right"` | `"right"` |
+| `hideBackdrop`           | `boolean`                                | `false`   |
+| `dismissOnBackdropPress` | `boolean` (tap backdrop to close)        | `true`    |
+| `dismissOnEscape`        | `boolean` (hardware back)                | `true`    |
+| `children`               | `ReactNode`                              | -         |
+| `backdropClassName`      | `string`                                 | -         |
+| `backdropStyle`          | `StyleProp<ViewStyle>` (RN-only)         | -         |
+| `className`              | `string` (panel)                         | -         |
+| `style`                  | `StyleProp<ViewStyle>` (RN-only)         | -         |
 
 **Built-in panel styles:** `bg-surface-primary`, `shadow-xl`. Left/right are `width: 80%` with `max-width: 400px` and full height; top/bottom are full width with `max-height: 60%`.
 
@@ -432,7 +432,25 @@ Strings/numbers are wrapped in `<Text>`; functions are invoked with the remainin
 </SafeAreaProvider>
 ```
 
-No props. Mounts `<DialogHost />`, `<DrawerHost />`, `<SelectMenuHost />`, `<ToastHost />`, `<TooltipHost />`. Render exactly once at the app root, ABOVE the screens that call `Dialog.show()` / `Toast.success()` / etc.
+No props. Composes `<GeckoUIOverlayHosts />` + `<DialogHost />` + `<DrawerHost />`. Render exactly once at the app root, ABOVE the screens that call `Dialog.show()` / `Toast.success()` / etc.
+
+### GeckoUIOverlayHosts
+
+Mounts the overlay hosts that must live inside every `Modal` layer: `CalendarPickerHost`, `MenuPanelHost`, `SelectMenuHost`, `ToastHost`, `TooltipHost`. Already embedded automatically inside `<Drawer>` and `<DialogHost>`.
+
+**Use this when you have a custom `Modal`** — drop it inside the modal so that `DateInput`, `Select`, `Menu`, `Toast`, and `Tooltip` all render above it:
+
+```tsx
+import { GeckoUIOverlayHosts } from "@geckoui/nativewind";
+import { Modal } from "react-native";
+
+<Modal visible={open} transparent statusBarTranslucent>
+  {/* your modal content — DateInput, Select, Menu etc. work here */}
+  <GeckoUIOverlayHosts />
+</Modal>;
+```
+
+Each host uses a stack — mounting `GeckoUIOverlayHosts` inside a `Modal` pushes inner hosts to the top of the stack, so all overlays route to the correct layer. When the `Modal` closes the hosts unmount and the root-level hosts take back control automatically.
 
 ### Input
 
@@ -874,7 +892,7 @@ Drawer.show(<Filters />, { placement: "bottom" });
 Drawer.dismiss();
 ```
 
-Imperative drawer reuses the declarative props — pass `placement`, `hideBackdrop`, `dismissOnEscape`, `className`, `backdropClassName`, etc. via the `options` arg.
+Imperative drawer reuses the declarative props — pass `placement`, `hideBackdrop`, `dismissOnBackdropPress`, `dismissOnEscape`, `className`, `backdropClassName`, etc. via the `options` arg.
 
 ### `Toast.success / .error / .warning / .info / .show / .dismiss`
 
